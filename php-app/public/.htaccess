@@ -1,0 +1,4 @@
+# Enable rewriting for clean URLs like /api/items
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^ index.php [QSA,L]

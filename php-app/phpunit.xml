@@ -1,0 +1,16 @@
+<phpunit bootstrap="tests/bootstrap.php"
+         colors="true"
+         stopOnFailure="false">
+    <testsuites>
+        <testsuite name="Application Test Suite">
+            <directory>tests</directory>
+        </testsuite>
+    </testsuites>
+    <php>
+        <env name="DB_HOST" value="mysql"/>
+        <env name="DB_NAME" value="appdb"/>
+        <env name="DB_USER" value="app"/>
+        <env name="DB_PASS" value="app"/>
+        <env name="API_URL" value="http://localhost"/>
+    </php>
+</phpunit>
