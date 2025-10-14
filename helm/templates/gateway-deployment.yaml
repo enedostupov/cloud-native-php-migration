@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-gateway
+  labels:
+    app: node-gateway
+    version: "{{ .Values.image.nodeGateway.tag }}"
+spec:
+  replicas: {{ .Values.replicas.nodeGateway }}
+  selector:
+    matchLabels:
+      app: node-gateway
+  template:
+    metadata:
+      labels:
+        app: node-gateway
+        version: "{{ .Values.image.nodeGateway.tag }}"
+    spec:
+      containers:
+        - name: node-gateway
+          image: "{{ .Values.image.nodeGateway.image }}:{{ .Values.image.nodeGateway.tag }}"
+          imagePullPolicy: {{ .Values.image.nodeGateway.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.service.gatewayPort }}
+              name: http
+          env:
+            - name: PHP_API_URL
+              value: "http://php-app:{{ .Values.service.phpPort }}"
+            - name: PORT
+              value: "{{ .Values.service.gatewayPort }}"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: {{ .Values.resources.nodeGateway.requests.cpu }}
+              memory: {{ .Values.resources.nodeGateway.requests.memory }}
+            limits:
+              cpu: {{ .Values.resources.nodeGateway.limits.cpu }}
+              memory: {{ .Values.resources.nodeGateway.limits.memory }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: node-gateway
+  labels:
+    app: node-gateway
+spec:
+  type: ClusterIP
+  selector:
+    app: node-gateway
+  ports:
+    - port: {{ .Values.service.gatewayPort }}
+      targetPort: {{ .Values.service.gatewayPort }}
+      protocol: TCP
+      name: http

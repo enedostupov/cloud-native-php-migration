@@ -1,0 +1,62 @@
+image:
+  phpApp:
+    image: cloud-native-php-migration-php-app
+    tag: latest
+    pullPolicy: IfNotPresent
+  nodeGateway:
+    image: cloud-native-php-migration-node-gateway
+    tag: latest
+    pullPolicy: IfNotPresent
+  mysql: mysql:8.0
+
+replicas:
+  phpApp: 1
+  nodeGateway: 2
+
+service:
+  phpPort: 80
+  gatewayPort: 3000
+  mysqlPort: 3306
+
+storage:
+  mysql: 1Gi
+
+resources:
+  phpApp:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  nodeGateway:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+  mysql:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 1Gi
+
+env:
+  db:
+    host: mysql
+    name: appdb
+    user: app
+    pass: app_password_change_me
+    rootPassword: root_password_change_me
+
+ingress:
+  enabled: true
+  className: nginx
+  host: cloud-demo.local
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+  tls: false
+  tlsSecret: ""

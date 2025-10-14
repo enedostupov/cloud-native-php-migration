@@ -1,0 +1,5 @@
+apiVersion: v2
+name: cloud-native-php-migration
+description: Cloud-ready PHP CRUD + Node.js gateway demo
+version: 0.1.0
+appVersion: "1.0.0"
