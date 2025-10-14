@@ -1,0 +1,5 @@
+vendor/
+.git/
+*.md
+.env
+.DS_Store

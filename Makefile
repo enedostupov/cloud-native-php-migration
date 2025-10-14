@@ -1,4 +1,4 @@
-.PHONY: dev build test test-clean logs shell stop clean rebuild seed
+.PHONY: dev build test test-clean logs logs-gateway shell shell-gateway stop clean rebuild seed check-health status
 
 # Start dev environment
 dev:
@@ -19,8 +19,21 @@ test-clean:
 		db()->exec("TRUNCATE TABLE books"); \
 		echo "✓ Test data cleaned\n";'
 
+# View PHP logs
 logs:
 	docker compose logs -f php-app
+
+# View Node Gateway logs
+logs-gateway:
+	docker compose logs -f node-gateway
+
+# Open shell in PHP container
+shell:
+	docker compose exec php-app bash
+
+# Open shell in Gateway container
+shell-gateway:
+	docker compose exec node-gateway sh
 
 # Stop containers
 stop:
@@ -51,3 +64,12 @@ seed:
 			$$stmt->execute([$$book["title"], $$book["author"]]); \
 			echo "✓ Created: {$$book["title"]}\n"; \
 		}'
+
+# Check gateway and backend health
+check-health:
+	@echo "Checking service health..."
+	@curl -s http://localhost:3000/health | jq . || curl -s http://localhost:3000/health
+
+# Show container status
+status:
+	docker compose ps
