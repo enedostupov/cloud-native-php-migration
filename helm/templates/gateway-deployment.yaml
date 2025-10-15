@@ -28,6 +28,8 @@ spec:
               value: "http://php-app:{{ .Values.service.phpPort }}"
             - name: PORT
               value: "{{ .Values.service.gatewayPort }}"
+            - name: JWT_SECRET
+              value: {{ .Values.env.jwt.secret | quote }}
           livenessProbe:
             httpGet:
               path: /health

@@ -44,6 +44,7 @@ services:
       - "3000:3000"
     environment:
       PHP_API_URL: http://php-app
+      JWT_SECRET: dev-secret-key-change-in-prod
     depends_on:
       php-app:
         condition: service_healthy

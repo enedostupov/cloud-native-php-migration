@@ -51,6 +51,8 @@ env:
     user: app
     pass: app_password_change_me
     rootPassword: root_password_change_me
+  jwt:
+    secret: change-me-in-production
 
 ingress:
   enabled: true
